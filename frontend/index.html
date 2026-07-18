@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StudyFlow AI</title>
+</head>
+<body>
+  <h1>StudyFlow AI</h1>
+  <p>Paste your class notes below and generate study material.</p>
+
+  <textarea id="notes" rows="12" cols="80" placeholder="Paste your notes here..."></textarea>
+  <br><br>
+
+  <button onclick="generateStudyMaterial()">Generate</button>
+
+  <h2>Result</h2>
+  <pre id="result"></pre>
+
+  <script>
+    async function generateStudyMaterial() {
+      const notes = document.getElementById("notes").value;
+      const resultBox = document.getElementById("result");
+
+      resultBox.textContent = "Generating...";
+
+      const response = await fetch("http://127.0.0.1:5001/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          course_notes: notes
+        })
+      });
+
+      const data = await response.json();
+      resultBox.textContent = data.result || data.error;
+    }
+  </script>
+</body>
+</html>
