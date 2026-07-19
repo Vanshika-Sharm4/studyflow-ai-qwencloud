@@ -29,6 +29,7 @@
 
   body{
     margin: 0;
+    padding-top: 60px;
     background: var(--bg);
     color: var(--text);
     font-family: var(--sans);
@@ -68,28 +69,6 @@
     height: 460px;
     background: radial-gradient(closest-side, var(--amber-soft), transparent 70%);
     pointer-events: none;
-  }
-
-  .eyebrow{
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 22px;
-  }
-
-  .eyebrow::before{
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--amber);
-    box-shadow: 0 0 10px 2px var(--amber-soft);
   }
 
   h1.title{
@@ -145,6 +124,47 @@
     opacity: 0.55;
     margin-bottom: 10px;
     display: block;
+  }
+
+  /* ---------- Upload row ---------- */
+
+  .upload-row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .btn-upload{
+    appearance: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(36,31,22,0.06);
+    border: 1px dashed rgba(36,31,22,0.35);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn-upload:hover{
+    border-color: var(--danger);
+    background: rgba(224,122,95,0.08);
+  }
+  .btn-upload svg{ width: 15px; height: 15px; flex-shrink: 0; }
+
+  .upload-status{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #8a8060;
+  }
+  .upload-status.error{
+    color: #b3452f;
   }
 
   textarea#notes{
@@ -360,35 +380,43 @@
     padding-bottom: 2px;
   }
 
-  /* ---------- Top bar / Courses button ---------- */
+  /* ---------- Top nav ---------- */
 
-  .topbar{
+  .topnav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
     display: flex;
-    justify-content: flex-end;
-    padding-top: 28px;
+    align-items: center;
+    padding: 0 20px;
+    background: rgba(18,20,42,0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(243,239,227,0.08);
+    z-index: 30;
   }
 
-  .courses-btn{
+  .hamburger-btn{
     appearance: none;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
     background: transparent;
-    border: 1px solid rgba(243,239,227,0.25);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 16px;
-    border-radius: 999px;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+    margin-left: -10px;
   }
-  .courses-btn:hover{
-    border-color: var(--amber);
-    background: var(--amber-soft);
+  .hamburger-btn span{
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--text);
   }
-  .courses-btn svg{ width: 14px; height: 14px; }
 
   /* ---------- Save / export action bar ---------- */
 
@@ -458,16 +486,16 @@
   .drawer{
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     bottom: 0;
     width: min(360px, 88vw);
     background: var(--bg-panel);
-    transform: translateX(100%);
+    transform: translateX(-100%);
     transition: transform 0.25s ease;
     z-index: 50;
     display: flex;
     flex-direction: column;
-    box-shadow: -20px 0 50px -20px rgba(0,0,0,0.6);
+    box-shadow: 20px 0 50px -20px rgba(0,0,0,0.6);
   }
   .drawer.show{
     transform: translateX(0);
@@ -499,14 +527,60 @@
   .drawer-close:hover{ color: var(--amber); }
 
   .drawer-body{
-    padding: 18px 22px 32px;
+    padding: 14px 14px 10px;
     overflow-y: auto;
+    flex: 1;
   }
+
+  .menu-item{
+    appearance: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 14.5px;
+    padding: 12px 10px;
+    border-radius: 8px;
+  }
+  .menu-item:hover{ background: rgba(232,163,61,0.08); }
+  .menu-item .chevron{
+    width: 15px;
+    height: 15px;
+    transition: transform 0.2s ease;
+  }
+  .menu-item .chevron.open{ transform: rotate(180deg); }
+
+  .courses-panel{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    padding: 0 10px;
+  }
+  .courses-panel.show{
+    max-height: 2000px;
+    padding: 6px 10px 10px;
+  }
+
+  .drawer-footer{
+    margin-top: auto;
+    padding: 14px 14px 20px;
+    border-top: 1px solid rgba(243,239,227,0.12);
+  }
+  .drawer-footer .menu-item svg{ width: 16px; height: 16px; }
 
   .drawer-empty{
     color: var(--text-muted);
     font-size: 13.5px;
     line-height: 1.6;
+    padding: 4px 10px 10px;
   }
 
   .course-group{
@@ -583,6 +657,107 @@
     background: rgba(224,122,95,0.08);
   }
 
+  /* ---------- Account modal ---------- */
+
+  .modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(8,9,20,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 70;
+  }
+  .modal-overlay.show{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: min(420px, 90vw);
+    background: var(--bg-panel);
+    border-radius: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -46%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 80;
+    box-shadow: 0 30px 70px -20px rgba(0,0,0,0.7);
+  }
+  .modal.show{
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  .modal-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px 14px;
+    border-bottom: 1px solid rgba(243,239,227,0.12);
+  }
+  .modal-header h2{
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .modal-body{
+    padding: 20px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .field-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: -4px;
+  }
+
+  .modal-body input[type="text"],
+  .modal-body input[type="email"]{
+    background: rgba(243,239,227,0.06);
+    border: 1px solid rgba(243,239,227,0.2);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  .modal-divider{
+    height: 1px;
+    background: rgba(243,239,227,0.12);
+    margin: 6px 0;
+  }
+
+  .btn-danger{
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .btn-danger:hover{
+    background: var(--danger);
+    color: #2a1a1a;
+  }
+
   /* ---------- Toast ---------- */
 
   .toast{
@@ -614,16 +789,14 @@
 </head>
 <body>
 
-<div class="wrap">
-  <div class="topbar">
-    <button class="courses-btn" id="coursesBtn" onclick="toggleDrawer()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
-      My Courses
-    </button>
-  </div>
+<nav class="topnav">
+  <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
+<div class="wrap">
   <header class="hero">
-    <span class="eyebrow">Autopilot Agent · QwenCloud Hackathon</span>
     <h1 class="title">Get in your <em>flow state</em><br>with StudyFlow</h1>
     <p class="subtitle">Paste your lecture notes and StudyFlow AI turns them into a summary, key terms, a practice quiz, and a study plan — in seconds.</p>
   </header>
@@ -631,6 +804,16 @@
   <main>
     <div class="pad-card">
       <label class="pad-label" for="notes">Course notes</label>
+
+      <div class="upload-row">
+        <button type="button" class="btn-upload" onclick="document.getElementById('fileInput').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0-12 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+          Upload PDF, PPTX, DOCX, or image
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,.pptx,.docx,.png,.jpg,.jpeg" hidden onchange="handleFileUpload(event)">
+        <span class="upload-status" id="uploadStatus"></span>
+      </div>
+
       <textarea id="notes" placeholder="Paste your notes here..."></textarea>
       <div class="pad-footer">
         <span class="char-count" id="charCount">0 characters</span>
@@ -664,13 +847,51 @@
 </div>
 
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer" aria-label="My Courses">
+<aside class="drawer" id="drawer" aria-label="Menu">
   <div class="drawer-header">
-    <h2>My Courses</h2>
+    <h2>Menu</h2>
     <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">&times;</button>
   </div>
-  <div class="drawer-body" id="drawerBody"></div>
+
+  <div class="drawer-body">
+    <button class="menu-item" id="coursesToggle" onclick="toggleCoursesPanel()">
+      <span>My Courses</span>
+      <svg class="chevron" id="coursesChevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="courses-panel" id="coursesPanel"></div>
+  </div>
+
+  <div class="drawer-footer">
+    <button class="menu-item" onclick="openAccountPanel()">
+      <span style="display:flex; align-items:center; gap:10px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Account &amp; Settings
+      </span>
+    </button>
+  </div>
 </aside>
+
+<div class="modal-overlay" id="accountOverlay" onclick="closeAccountModal()"></div>
+<div class="modal" id="accountModal" role="dialog" aria-label="Account and settings">
+  <div class="modal-header">
+    <h2>Account &amp; Settings</h2>
+    <button class="drawer-close" onclick="closeAccountModal()" aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <label class="field-label" for="displayName">Display name</label>
+    <input type="text" id="displayName" placeholder="Your name">
+
+    <label class="field-label" for="displayEmail">Email</label>
+    <input type="email" id="displayEmail" placeholder="you@school.edu">
+
+    <button class="btn-secondary" onclick="saveAccountSettings()">Save changes</button>
+
+    <div class="modal-divider"></div>
+
+    <span class="field-label">Data</span>
+    <button class="btn-danger" onclick="clearAllData()">Clear all saved notes</button>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -679,6 +900,7 @@
   // Update this once the backend is deployed on Alibaba Cloud ECS,
   // e.g. "https://your-ecs-ip-or-domain/generate"
   const API_URL = "http://127.0.0.1:5001/generate";
+  const EXTRACT_URL = "http://127.0.0.1:5001/extract";
 
   const notesEl = document.getElementById("notes");
   const charCount = document.getElementById("charCount");
@@ -876,14 +1098,14 @@
   function renderDrawer() {
     const courses = loadCourses();
     const names = Object.keys(courses);
-    const drawerBody = document.getElementById("drawerBody");
+    const panel = document.getElementById("coursesPanel");
 
     if (names.length === 0) {
-      drawerBody.innerHTML = `<p class="drawer-empty">No saved notes yet. Generate study material, then save it to a course folder.</p>`;
+      panel.innerHTML = `<p class="drawer-empty">No saved notes yet. Generate study material, then save it to a course folder.</p>`;
       return;
     }
 
-    drawerBody.innerHTML = names.map(name => `
+    panel.innerHTML = names.map(name => `
       <div class="course-group">
         <div class="course-name">${escapeHtml(name)} <span class="course-count">${courses[name].length}</span></div>
         <div class="course-entries">
@@ -901,7 +1123,7 @@
     `).join("");
   }
 
-  document.getElementById("drawerBody").addEventListener("click", (e) => {
+  document.getElementById("coursesPanel").addEventListener("click", (e) => {
     const openBtn = e.target.closest(".entry-open");
     if (openBtn) {
       loadEntry(openBtn.dataset.course, openBtn.dataset.id);
@@ -913,8 +1135,22 @@
     }
   });
 
+  function toggleCoursesPanel() {
+    const panel = document.getElementById("coursesPanel");
+    const chevron = document.getElementById("coursesChevron");
+    const isOpen = panel.classList.contains("show");
+
+    if (isOpen) {
+      panel.classList.remove("show");
+      chevron.classList.remove("open");
+    } else {
+      renderDrawer();
+      panel.classList.add("show");
+      chevron.classList.add("open");
+    }
+  }
+
   function openDrawer() {
-    renderDrawer();
     document.getElementById("drawer").classList.add("show");
     document.getElementById("drawerOverlay").classList.add("show");
   }
@@ -935,6 +1171,49 @@
     toast.classList.add("show");
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+  }
+
+  /* ---------- Account & settings ---------- */
+
+  const ACCOUNT_KEY = "studyflow_account";
+
+  function loadAccount() {
+    try {
+      return JSON.parse(localStorage.getItem(ACCOUNT_KEY)) || {};
+    } catch {
+      return {};
+    }
+  }
+
+  function openAccountPanel() {
+    const account = loadAccount();
+    document.getElementById("displayName").value = account.name || "";
+    document.getElementById("displayEmail").value = account.email || "";
+    document.getElementById("accountOverlay").classList.add("show");
+    document.getElementById("accountModal").classList.add("show");
+  }
+
+  function closeAccountModal() {
+    document.getElementById("accountOverlay").classList.remove("show");
+    document.getElementById("accountModal").classList.remove("show");
+  }
+
+  function saveAccountSettings() {
+    const name = document.getElementById("displayName").value.trim();
+    const email = document.getElementById("displayEmail").value.trim();
+    localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ name, email }));
+    showToast("Settings saved");
+    closeAccountModal();
+  }
+
+  function clearAllData() {
+    const confirmed = confirm("This deletes all saved courses and notes from this browser. This can't be undone. Continue?");
+    if (!confirmed) return;
+
+    localStorage.removeItem(STORAGE_KEY);
+    renderDrawer();
+    populateCourseDatalist();
+    showToast("All saved notes cleared");
   }
 
   populateCourseDatalist();
@@ -990,6 +1269,55 @@
     });
 
     doc.save(`StudyFlow-${new Date().toISOString().slice(0, 10)}.pdf`);
+  }
+
+  /* ---------- File upload (PDF / PPTX) ---------- */
+
+  async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const uploadStatus = document.getElementById("uploadStatus");
+    const ext = file.name.split(".").pop().toLowerCase();
+
+    uploadStatus.classList.remove("error");
+
+    if (!["pdf", "pptx", "docx", "png", "jpg", "jpeg"].includes(ext)) {
+      uploadStatus.textContent = "Only PDF, PPTX, DOCX, or image files are supported.";
+      uploadStatus.classList.add("error");
+      event.target.value = "";
+      return;
+    }
+
+    uploadStatus.textContent = `Reading ${file.name}…`;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch(EXTRACT_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Couldn't read that file.");
+      }
+
+      const existing = notesEl.value.trim();
+      notesEl.value = existing ? `${existing}\n\n${data.text}` : data.text;
+      charCount.textContent = `${notesEl.value.length} characters`;
+      uploadStatus.textContent = `Added text from ${file.name}`;
+    } catch (err) {
+      uploadStatus.textContent = err.message.includes("fetch")
+        ? "Couldn't reach the backend. Make sure the server is running."
+        : err.message;
+      uploadStatus.classList.add("error");
+    } finally {
+      event.target.value = "";
+    }
   }
 
   async function generateStudyMaterial() {
